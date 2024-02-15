@@ -3,5 +3,10 @@ steps:
   script: |
     #!/usr/bin/env bash
     echo "your project id is: $BRANCH_NAME"
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: 'bash'
+  args: [ '-c', "gcloud secrets versions access latest --secret=pr-secret-id --format='get(payload.data)' | tr '_-' '/+' | base64 -d > token.txt" ]
+- name: 'gcr.io/$PROJECT_ID/github'
+  args: ['repo', 'view', 'duboc/pr-review']
 options:
   automapSubstitutions: true
