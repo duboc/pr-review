@@ -3,7 +3,7 @@ import google.cloud.storage
 
 # Function to create a GCS   
 
-#removed empty spaces   
+#removed empty spaces      
 def create_bucket(bucket_name):
     """Creates a new bucket."""
     # bucket_name = "your-new-bucket-name"
