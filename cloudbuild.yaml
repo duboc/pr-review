@@ -7,6 +7,6 @@ steps:
   entrypoint: 'bash'
   args: [ '-c', "gcloud secrets versions access latest --secret=pr-secret-id --format='get(payload.data)' | tr '_-' '/+' | base64 -d > token.txt" ]
 - name: 'gcr.io/$PROJECT_ID/github'
-  args: ['pr diff', '$_PR_NUMBER', 'duboc/pr-review']
+  args: ['pr', 'diff', '$_PR_NUMBER']
 options:
   automapSubstitutions: true
