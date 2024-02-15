@@ -16,7 +16,7 @@ Execute the following command to deploy the function
 
    ```bash
 
-   gcloud functions deploy devai \
+   gcloud functions deploy pr_review \
    --gen2 \
    --runtime=python311 \
    --region=$GCP_REGION \
