@@ -61,3 +61,10 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     print(f"File {source_file_name} uploaded to {destination_blob_name}.")
 
     return blob  
+
+# generate python function to list buckets  
+
+
+def test(x):
+    x = 0
+    return x
