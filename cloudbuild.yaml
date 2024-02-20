@@ -7,6 +7,10 @@ steps:
   entrypoint: 'bash'
   args: [ '-c', "gcloud secrets versions access latest --secret=pr-secret-id --format='get(payload.data)' | tr '_-' '/+' | base64 -d > token.txt" ]
 - name: 'gcr.io/$PROJECT_ID/github'
-  args: ['pr', 'diff', '$_PR_NUMBER']
+  args: ['pr', 'diff', '$_PR_NUMBER > /workspace/diff_string.txt']
+- name: 'bash'
+  script: |
+    echo "Teste VAR:"
+    cat /workspace/diff_string.txt
 options:
   automapSubstitutions: true
