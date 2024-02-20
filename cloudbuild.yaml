@@ -17,7 +17,8 @@ steps:
       gh pr diff $_PR_NUMBER > /workspace/diff_string.txt
       echo "------------------PR Diff retrieved------------------"
 - id: call-cloud-run-vertex-api
-  name: 'bash'
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: 'bash'
   script: |
     echo "----------Teste VAR:"
     cat /workspace/diff_string.txt
