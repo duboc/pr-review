@@ -16,10 +16,15 @@ steps:
       echo "------------------Get PR Diff------------------"
       gh pr diff $_PR_NUMBER > /workspace/diff_string.txt
       echo "------------------PR Diff retrieved------------------"
-- name: 'bash'
+- id: call-cloud-run-vertex-api
+  name: 'bash'
   script: |
     echo "----------Teste VAR:"
     cat /workspace/diff_string.txt
     echo "------------------EOF------------------"
+    diff_file_content=$(cat /workspace/diff_string.txt)
+    echo "------------------Curl Cloud Run------------------"
+    curl -X POST -H "Content-Type: application/json" -d '{ "code": $diff_file_content}' https://pr-review-o5id653ria-uc.a.run.app/pr_review | jq .
+    echo "------------------End Cloud Run Response------------------"
 options:
   automapSubstitutions: true
