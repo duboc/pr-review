@@ -18,7 +18,6 @@ steps:
       echo "------------------PR Diff retrieved------------------"
 - id: call-cloud-run-vertex-api
   name: gcr.io/cloud-builders/gcloud
-  entrypoint: 'bash'
   script: |
     echo "----------Teste VAR:"
     cat /workspace/diff_string.txt
