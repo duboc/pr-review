@@ -1,0 +1,4 @@
+google-cloud-logging
+google-cloud-aiplatform
+functions_framework
+google-cloud-storage
