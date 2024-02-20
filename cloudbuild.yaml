@@ -34,10 +34,9 @@ steps:
     - | 
       echo "------------------GH AUTH------------------"
       gh auth login --with-token < token.txt
-      echo "------------------Get PR Diff------------------"
+      echo "------------------Create PR Comment------------------"
       response_vertex=$(cat /workspace/vertex_response.txt)
       gh pr comment $_PR_NUMBER --body "$response_vertex"
-      echo "------------------PR Diff retrieved------------------"
-
+      echo "------------------Comment inserted on PR------------------"
 options:
   automapSubstitutions: true
