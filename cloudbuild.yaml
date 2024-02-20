@@ -11,15 +11,15 @@ steps:
   args: 
     - -c
     - | 
-      set -e
-      echo "------------------BLOCK------------------"
+      echo "------------------GH AUTH------------------"
       gh auth login --with-token < token.txt
-      echo "------------------BLOCK------------------"
+      echo "------------------Get PR Diff------------------"
       gh pr diff $_PR_NUMBER > /workspace/diff_string.txt
-      echo "------------------BLOCK------------------"
+      echo "------------------PR Diff retrieved------------------"
 - name: 'bash'
   script: |
-    echo "Teste VAR:"
+    echo "----------Teste VAR:"
     cat /workspace/diff_string.txt
+    echo "------------------EOF------------------"
 options:
   automapSubstitutions: true
