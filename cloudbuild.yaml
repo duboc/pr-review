@@ -7,6 +7,36 @@ steps:
   entrypoint: 'bash'
   args: [ '-c', "gcloud secrets versions access latest --secret=pr-secret-id --format='get(payload.data)' | tr '_-' '/+' | base64 -d > token.txt" ]
 - name: 'gcr.io/$PROJECT_ID/github'
-  args: ['pr', 'diff', '$_PR_NUMBER', 'duboc/pr-review']
+  entrypoint: bash
+  args: 
+    - -c
+    - | 
+      echo "------------------GH AUTH------------------"
+      gh auth login --with-token < token.txt
+      echo "------------------Get PR Diff------------------"
+      gh pr diff $_PR_NUMBER > /workspace/diff_string.txt
+      echo "------------------PR Diff retrieved------------------"
+- id: call-cloud-run-vertex-api
+  name: gcr.io/cloud-builders/gcloud
+  script: |
+    echo "----------Teste VAR:"
+    cat /workspace/diff_string.txt
+    echo "------------------EOF------------------"
+    diff_file_content=$(cat /workspace/diff_string.txt)
+    echo "------------------Curl Cloud Run------------------"
+    curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://pr-review-o5id653ria-uc.a.run.app/pr_review > /workspace/vertex_response.txt
+    echo "------------------End Cloud Run Response------------------"
+- id: comment_PR_Repo
+  name: 'gcr.io/$PROJECT_ID/github'
+  entrypoint: bash
+  args: 
+    - -c
+    - | 
+      echo "------------------GH AUTH------------------"
+      gh auth login --with-token < token.txt
+      echo "------------------Create PR Comment------------------"
+      response_vertex=$(cat /workspace/vertex_response.txt)
+      gh pr comment $_PR_NUMBER --body "$response_vertex"
+      echo "------------------Comment inserted on PR------------------"
 options:
   automapSubstitutions: true
