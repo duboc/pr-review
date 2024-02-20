@@ -8,36 +8,18 @@ steps:
   args: [ '-c', "gcloud secrets versions access latest --secret=pr-secret-id --format='get(payload.data)' | tr '_-' '/+' | base64 -d > token.txt" ]
 - name: 'gcr.io/$PROJECT_ID/github'
   entrypoint: bash
-  # args: ['pr', 'diff', '$_PR_NUMBER > /workspace/diff_string.txt']
   args: 
     - -c
     - | 
       set -e
       echo "------------------BLOCK------------------"
       gh auth login --with-token < token.txt
-      gh pr diff $_PR_NUMBER
       echo "------------------BLOCK------------------"
-# - id: retrieve delta
-#   name: gcr.io/cloud-builders/git
-#   entrypoint: bash
-#   args: 
-#     - -c
-#     - | 
-#       set -e
-#       git fetch --unshallow
-      
-#       # get the changed files
-#       git diff origin/${_BASE_BRANCH} > _changed_files
-      
-#       echo "------------------BLOCK------------------"
-#       cat _changed_files
-#       echo "------------------BLOCK------------------"
-
-#       # parse out the folders that have changed
-#       cat _changed_files | grep '/' | cut -d '/' -f1 | sort | uniq | tr '\n' ' ' > _changed_folders
-
-#       echo "Change files:" && cat _changed_files
-#       echo "Change folders:" && cat _changed_folders
-#       echo "EOF"
+      gh pr diff $_PR_NUMBER > /workspace/diff_string.txt
+      echo "------------------BLOCK------------------"
+- name: 'bash'
+  script: |
+    echo "Teste VAR:"
+    cat /workspace/diff_string.txt
 options:
   automapSubstitutions: true
