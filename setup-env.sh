@@ -12,6 +12,7 @@ gcloud services enable \
     aiplatform.googleapis.com \
     cloudfunctions.googleapis.com \
     compute.googleapis.com \
+    bigquery.googleapis.com \
     run.googleapis.com \
     cloudbuild.googleapis.com \
     artifactregistry.googleapis.com \
