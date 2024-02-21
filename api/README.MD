@@ -8,14 +8,13 @@ This application demonstrates a simple GenAI CodeReview using Cloud Function.
 Insert your Project_ID and execute the following lines.
 
 ```bash
-export GCP_PROJECT='<Your GCP Project Id>'  # Change this
+export GCP_PROJECT='conventodapenha'  # Change this
 export GCP_REGION='us-central1'  
 ```
 
 Execute the following command to deploy the function
 
    ```bash
-
    gcloud functions deploy pr_review \
    --gen2 \
    --runtime=python311 \

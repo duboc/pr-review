@@ -7,6 +7,8 @@ import google.cloud.logging
 import vertexai
 from vertexai.language_models import TextGenerationModel
 from flask_cors import cross_origin
+from vertexai.preview.generative_models import GenerativeModel, Part
+import vertexai.preview.generative_models as generative_
 
 PROJECT_ID = os.environ.get('GCP_PROJECT', '-')
 LOCATION = os.environ.get('GCP_REGION', '-')
@@ -32,15 +34,30 @@ def pr_review(request):
         logger.log(user_code)
 
     vertexai.init(project=PROJECT_ID, location=LOCATION)
-    model = TextGenerationModel.from_pretrained("text-bison")
-    prompt = f"You're a senior developer tasked with reviewing code. review the following code and report out any findings: {user_code}"
-    parameters = {
-        "temperature": 1.0,
-        "max_output_tokens": 256,
-        "top_p": 1.0,
-        "top_k": 40
-    }
-    prompt_response = model.predict(prompt, **parameters)
+    # model = TextGenerationModel.from_pretrained("text-bison")
+    
+    model = GenerativeModel("gemini-pro")
+
+    prompt = f"""You're a senior developer tasked with reviewing code. review the following code and report out any findings: {user_code}
+    
+    Use markdown to format your response."""
+    
+    prompt_response = model.generate_content(prompt,
+        generation_config={
+            "max_output_tokens": 4096,
+            "temperature": 0,
+            "top_p": 0.5
+        },
+    )
+
+    # parameters = {
+    #     "temperature": 1.0,
+    #     "max_output_tokens": 256,
+    #     "top_p": 1.0,
+    #     "top_k": 40
+    # }
+    # prompt_response = model.predict(prompt, **parameters)
+    
     logger.log(f"PaLM Text Bison Model response: {prompt_response.text}")
 
     # Format the response
