@@ -19,9 +19,6 @@ steps:
 - id: call-cloud-run-vertex-api
   name: gcr.io/cloud-builders/gcloud
   script: |
-    echo "----------Teste VAR:"
-    cat /workspace/diff_string.txt
-    echo "------------------EOF------------------"
     diff_file_content=$(cat /workspace/diff_string.txt)
     echo "------------------Curl Cloud Run------------------"
     curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://pr-review-o5id653ria-uc.a.run.app/pr_review > /workspace/vertex_response.txt
