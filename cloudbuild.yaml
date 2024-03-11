@@ -23,6 +23,8 @@ steps:
     cat /workspace/diff_string.txt
     echo "------------------EOF------------------"
     diff_file_content=$(cat /workspace/diff_string.txt)
+    echo "$diff_file_content"
+    echo "------------------EOF------------------"
     echo "------------------Curl Cloud Run------------------"
     curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://us-central1-conventodapenha.cloudfunctions.net/diff_review > /workspace/vertex_response.txt
     echo "------------------End Cloud Run Response------------------"
