@@ -36,10 +36,10 @@ def diff_review(request):
     vertexai.init(project=PROJECT_ID, location=LOCATION)
     # model = TextGenerationModel.from_pretrained("text-bison")
     
-    model = GenerativeModel("gemini-1.0-pro-001"")
+    model = GenerativeModel("gemini-1.0-pro-001")
 
     prompt = f"""
-    Task: Analyze code changes and provide a change management summary.
+    Task: Analyze code changes and provide a change management summary and provide all the answers in markdown format.
 
         Inputs:
             Code: {user_code}
@@ -55,7 +55,7 @@ def diff_review(request):
     prompt_response = model.generate_content(prompt,
         generation_config={
             "max_output_tokens": 4096,
-            "temperature": 0.9,
+            "temperature": 0.4,
             "top_p": 1
         },
     )

@@ -42,14 +42,11 @@ def sec_review(request):
 
     Prompt:
 
-        Task: Conduct a security-focused code review to identify potential vulnerabilities.
+        Task: Conduct a security-focused code review to identify potential vulnerabilities and provide all the answers in markdown format.
 
         Inputs:
 
             Code: {user_code}
-		    Context: If available, a brief description of:
-		The application's purpose and what type of data it handles.
-		Any frameworks or libraries in use.
 		Focus Areas:
 			Insecure Cookies: Check cookie handling for issues like missing HttpOnly and Secure flags, inadequate expiration, or sensitive data stored in plaintext.
             Insecure Session Management: Examine session generation, storage, transmission, timeout mechanisms, and protection against session hijacking or fixation.
@@ -72,7 +69,7 @@ def sec_review(request):
     prompt_response = model.generate_content(prompt,
         generation_config={
             "max_output_tokens": 4096,
-            "temperature": 0.9,
+            "temperature": 0.4,
             "top_p": 1
         },
     )

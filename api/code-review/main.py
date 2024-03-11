@@ -39,7 +39,7 @@ def pr_review(request):
     model = GenerativeModel("gemini-1.0-pro-001")
 
     prompt = f"""
-    Task: Perform automated code review to identify potential inefficiencies and poor coding practices.
+    Task: Perform automated code review to identify potential inefficiencies and poor coding practices and provide all the answers in markdown format.
 
     Input:
         {user_code}
@@ -60,8 +60,8 @@ def pr_review(request):
     prompt_response = model.generate_content(prompt,
         generation_config={
             "max_output_tokens": 4096,
-            "temperature": 0.9,
-            "top_p": 0.5
+            "temperature": 0.4,
+            "top_p": 1
         },
     )
 
