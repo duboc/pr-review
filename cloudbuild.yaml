@@ -36,7 +36,7 @@ steps:
       gh auth login --with-token < token.txt
       echo "------------------Create PR Comment------------------"
       response_vertex=$(cat /workspace/vertex_response.txt)
-      gh pr comment $_PR_NUMBER --body "# Diff Review:<br /> $response_vertex"
+      gh pr comment $_PR_NUMBER --body "Diff Review:<br /> $response_vertex"
       echo "------------------Comment inserted on PR------------------"
 - id: call-cloud-run-vertex-api-sec
   name: gcr.io/cloud-builders/gcloud
@@ -58,7 +58,7 @@ steps:
       gh auth login --with-token < token.txt
       echo "------------------Create PR Comment------------------"
       response_vertex=$(cat /workspace/vertex_sec_response.txt)
-      gh pr comment $_PR_NUMBER --body "# Security Review:<br /> $response_vertex"
+      gh pr comment $_PR_NUMBER --body "Security Review:<br /> $response_vertex"
       echo "------------------Comment inserted on PR------------------"
 - id: call-cloud-run-vertex-api-perf
   name: gcr.io/cloud-builders/gcloud
@@ -80,7 +80,7 @@ steps:
       gh auth login --with-token < token.txt
       echo "------------------Create PR Comment------------------"
       response_vertex=$(cat /workspace/vertex_perf_response.txt)
-      gh pr comment $_PR_NUMBER --body "# Perf Review:<br /> $response_vertex"
+      gh pr comment $_PR_NUMBER --body "Perf Review:<br /> $response_vertex"
       echo "------------------Comment inserted on PR------------------"
 options:
   automapSubstitutions: true
