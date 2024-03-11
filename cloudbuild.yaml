@@ -24,7 +24,7 @@ steps:
     echo "------------------EOF------------------"
     diff_file_content=$(cat /workspace/diff_string.txt)
     echo "------------------Curl Cloud Run------------------"
-    curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://pr-review-o5id653ria-uc.a.run.app/pr_review > /workspace/vertex_response.txt
+    curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://us-central1-conventodapenha.cloudfunctions.net/diff_review > /workspace/vertex_response.txt
     echo "------------------End Cloud Run Response------------------"
 - id: comment_PR_Repo
   name: 'gcr.io/$PROJECT_ID/github'
@@ -36,6 +36,50 @@ steps:
       gh auth login --with-token < token.txt
       echo "------------------Create PR Comment------------------"
       response_vertex=$(cat /workspace/vertex_response.txt)
+      gh pr comment $_PR_NUMBER --body "$response_vertex"
+      echo "------------------Comment inserted on PR------------------"
+- id: call-cloud-run-vertex-api-sec
+  name: gcr.io/cloud-builders/gcloud
+  script: |
+    echo "----------Teste VAR:"
+    cat /workspace/diff_string.txt
+    echo "------------------EOF------------------"
+    diff_file_content=$(cat /workspace/diff_string.txt)
+    echo "------------------Curl Cloud Run------------------"
+    curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://us-central1-conventodapenha.cloudfunctions.net/sec_review > /workspace/vertex_sec_response.txt
+    echo "------------------End Cloud Run Response------------------"
+- id: comment_PR_Repo-sec
+  name: 'gcr.io/$PROJECT_ID/github'
+  entrypoint: bash
+  args: 
+    - -c
+    - | 
+      echo "------------------GH AUTH------------------"
+      gh auth login --with-token < token.txt
+      echo "------------------Create PR Comment------------------"
+      response_vertex=$(cat /workspace/vertex_sec_response.txt)
+      gh pr comment $_PR_NUMBER --body "$response_vertex"
+      echo "------------------Comment inserted on PR------------------"
+- id: call-cloud-run-vertex-api-perf
+  name: gcr.io/cloud-builders/gcloud
+  script: |
+    echo "----------Teste VAR:"
+    cat /workspace/diff_string.txt
+    echo "------------------EOF------------------"
+    diff_file_content=$(cat /workspace/diff_string.txt)
+    echo "------------------Curl Cloud Run------------------"
+    curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://us-central1-conventodapenha.cloudfunctions.net/perf_review > /workspace/vertex_perf_response.txt
+    echo "------------------End Cloud Run Response------------------"
+- id: comment_PR_Repo-perf
+  name: 'gcr.io/$PROJECT_ID/github'
+  entrypoint: bash
+  args: 
+    - -c
+    - | 
+      echo "------------------GH AUTH------------------"
+      gh auth login --with-token < token.txt
+      echo "------------------Create PR Comment------------------"
+      response_vertex=$(cat /workspace/vertex_perf_response.txt)
       gh pr comment $_PR_NUMBER --body "$response_vertex"
       echo "------------------Comment inserted on PR------------------"
 options:
