@@ -39,10 +39,10 @@ def pr_review(request):
     model = GenerativeModel("gemini-1.0-pro-001")
 
     prompt = f"""
-    Task: Perform automated code review to identify potential inefficiencies and poor coding practices and provide all the answers in markdown format.
+    Consider the following code:
+    {user_code}
 
-    Input:
-        {user_code}
+    Perform automated code review to identify potential inefficiencies and poor coding practices and provide all the answers in markdown format.
     Output:
         If issues found:
             Location: Class and method name(s) where the issue occurs.

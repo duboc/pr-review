@@ -1,17 +1,13 @@
 import google.cloud.storage
 
 
-# Function to create a GCS   
+# Function to create blob
+def create_blob_root_container(self, blob_service_client: BlobServiceClient):
+    container_client = blob_service_client.get_container_client(container="$root")
 
-#removed empty spaces      
-def create_bucket(bucket_name):
-    """Creates a new bucket."""
-    # bucket_name = "your-new-bucket-name"
-    storage_client = storage.Client()
-    bucket = storage_client.create_bucket(bucket_name)
-    print(f"Bucket {bucket.name} created")
-    return bucket  
-
+    # Create the root container if it doesn't already exist
+    if not container_client.exists():
+        container_client.create_container()
 
 # Function to upload a file to GCS
 
