@@ -42,10 +42,10 @@ def diff_review(request):
     Task: Analyze code changes and provide a change management summary.
 
         Inputs:
+            This is the provided code: {user_code}
             Git Diffs: Showing lines added (+) and removed (-) within the context of the final code.
             Git Commits: Developer-written commit messages.
             Final Code: The complete source code after the changes have been applied.
-            This is the provided code: {user_code}
         Output:
             Change Summary: A concise explanation, aimed at a change management audience, focusing on the following:
             High-Level Description: In a few sentences, describe the overall purpose of the code changes.
