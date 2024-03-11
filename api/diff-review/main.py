@@ -36,33 +36,27 @@ def diff_review(request):
     vertexai.init(project=PROJECT_ID, location=LOCATION)
     # model = TextGenerationModel.from_pretrained("text-bison")
     
-    model = GenerativeModel("gemini-pro")
+    model = GenerativeModel("gemini-1.0-pro-001")
 
     prompt = f"""
-    Task: Analyze code changes and provide a change management summary.
+    Task: Analyze code changes and provide a change management summary and provide all the answers in markdown format.
 
         Inputs:
-            This is the provided code: {user_code}
-            Git Diffs: Showing lines added (+) and removed (-) within the context of the final code.
-            Git Commits: Developer-written commit messages.
-            Final Code: The complete source code after the changes have been applied.
-        Output:
-            Change Summary: A concise explanation, aimed at a change management audience, focusing on the following:
-            High-Level Description: In a few sentences, describe the overall purpose of the code changes.
-            Key Changes (Bullet Points):
-            Briefly explain each significant new code addition indicated by the Git diffs.
-            Relate these changes to the commit messages for context, if helpful.
-            Potential Impact: If possible, note any expected impact on functionality, user experience, or system dependencies (this may be speculative based on the provided information).
-    Style:
-        Professional Tone: Write in a clear, business-oriented style suitable for internal change management documents.
-        Focus on New Code: Concentrate on explaining the changes themselves, avoid analyzing the quality of existing code.
-"""
+            Code: {user_code}
+        Output expected:
+            If changes are found:
+                Change Summary: A concise explanation, aimed at a change management audience, focusing on the following:
+                High-Level Description: In a few sentences, describe the overall purpose of the code changes.
+                Key Changes (Bullet Points):
+                Briefly explain each significant new code addition indicated by the Git diffs.
+                Relate these changes to the commit messages for context, if helpful.
+            If no changes are found: Output "No changes are found."""
     
     prompt_response = model.generate_content(prompt,
         generation_config={
             "max_output_tokens": 4096,
-            "temperature": 0,
-            "top_p": 0.5
+            "temperature": 0.4,
+            "top_p": 1
         },
     )
 

@@ -36,10 +36,10 @@ def perf_review(request):
     vertexai.init(project=PROJECT_ID, location=LOCATION)
     # model = TextGenerationModel.from_pretrained("text-bison")
     
-    model = GenerativeModel("gemini-pro")
+    model = GenerativeModel("gemini-1.0-pro-001")
 
     prompt = f"""
-    Task: Conduct an application performance review, focusing on language-specific issues that can lead to bottlenecks or resource contention.
+    Task: Conduct an application performance review, focusing on language-specific issues that can lead to bottlenecks or resource contention and provide all the answers in markdown format.
 
     Input:
         {user_code}
@@ -57,8 +57,8 @@ def perf_review(request):
     prompt_response = model.generate_content(prompt,
         generation_config={
             "max_output_tokens": 4096,
-            "temperature": 0,
-            "top_p": 0.5
+            "temperature": 0.4,
+            "top_p": 1
         },
     )
 

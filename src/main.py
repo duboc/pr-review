@@ -59,9 +59,17 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 
     return blob  
 
-# generate python function to list buckets  
+# generate python function to list buckets   
+def list_buckets():
+    """Lists all buckets."""
+    storage_client = storage.Client()
 
+    # Note: Client.list_buckets requires at least package version 1.17.0.
+    buckets = list(storage_client.list_buckets())
 
-def test(x):
-    x = 0
-    return x
+    print("Buckets:")
+    for bucket in buckets:
+        print(bucket.name)
+
+    return buckets  
+ 
