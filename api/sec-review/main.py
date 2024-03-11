@@ -19,7 +19,7 @@ logger = client.logger(log_name)
 
 @cross_origin()
 @functions_framework.http
-def diff_review(request):
+def sec_review(request):
     logger.log(f"Received a request for code review")
 
     # Parse the request body
@@ -39,23 +39,34 @@ def diff_review(request):
     model = GenerativeModel("gemini-pro")
 
     prompt = f"""
-    Task: Analyze code changes and provide a change management summary.
+
+    Prompt:
+
+        Task: Conduct a security-focused code review to identify potential vulnerabilities.
 
         Inputs:
-            This is the provided code: {user_code}
-            Git Diffs: Showing lines added (+) and removed (-) within the context of the final code.
-            Git Commits: Developer-written commit messages.
-            Final Code: The complete source code after the changes have been applied.
-        Output:
-            Change Summary: A concise explanation, aimed at a change management audience, focusing on the following:
-            High-Level Description: In a few sentences, describe the overall purpose of the code changes.
-            Key Changes (Bullet Points):
-            Briefly explain each significant new code addition indicated by the Git diffs.
-            Relate these changes to the commit messages for context, if helpful.
-            Potential Impact: If possible, note any expected impact on functionality, user experience, or system dependencies (this may be speculative based on the provided information).
-    Style:
-        Professional Tone: Write in a clear, business-oriented style suitable for internal change management documents.
-        Focus on New Code: Concentrate on explaining the changes themselves, avoid analyzing the quality of existing code.
+
+            Code: {user_code}
+		    Context: If available, a brief description of:
+		The application's purpose and what type of data it handles.
+		Any frameworks or libraries in use.
+		Focus Areas:
+			Insecure Cookies: Check cookie handling for issues like missing HttpOnly and Secure flags, inadequate expiration, or sensitive data stored in plaintext.
+            Insecure Session Management: Examine session generation, storage, transmission, timeout mechanisms, and protection against session hijacking or fixation.
+		    SQL Injection: Look for any unsanitized user input used directly in SQL queries.
+		    Cross-Site Scripting (XSS): Inspect how user input is handled and whether it's properly sanitized/encoded before being rendered on web pages.
+		    Other Vulnerabilities: Remain alert for:
+		    Authorization flaws (e.g., missing access checks)
+		    Buffer overflows (especially in languages like C/C++)
+		    Insecure file uploads
+		    Sensitive data exposure
+		Output:
+		    If issues found:
+		        Class name.Method name: Where the vulnerability exists.
+		        Issue: Specific type of vulnerability (e.g., SQL injection, reflected XSS).
+		        Explanation: Brief description of why the code is problematic.
+		        Recommendation: Concrete steps to fix the vulnerability, including code examples if possible.
+		    If no issues found: Output "No major security issues found."
 """
     
     prompt_response = model.generate_content(prompt,
