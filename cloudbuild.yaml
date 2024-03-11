@@ -23,6 +23,8 @@ steps:
     cat /workspace/diff_string.txt
     echo "------------------EOF------------------"
     diff_file_content=$(cat /workspace/diff_string.txt)
+    echo "$diff_file_content"
+    echo "------------------EOF------------------"
     echo "------------------Curl Cloud Run------------------"
     curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://us-central1-conventodapenha.cloudfunctions.net/diff_review > /workspace/vertex_response.txt
     echo "------------------End Cloud Run Response------------------"
@@ -36,7 +38,7 @@ steps:
       gh auth login --with-token < token.txt
       echo "------------------Create PR Comment------------------"
       response_vertex=$(cat /workspace/vertex_response.txt)
-      gh pr comment $_PR_NUMBER --body "Diff Review: $response_vertex"
+      gh pr comment $_PR_NUMBER --body "Diff Review:<br /> $response_vertex"
       echo "------------------Comment inserted on PR------------------"
 - id: call-cloud-run-vertex-api-sec
   name: gcr.io/cloud-builders/gcloud
@@ -58,7 +60,7 @@ steps:
       gh auth login --with-token < token.txt
       echo "------------------Create PR Comment------------------"
       response_vertex=$(cat /workspace/vertex_sec_response.txt)
-      gh pr comment $_PR_NUMBER --body "Security Review: $response_vertex"
+      gh pr comment $_PR_NUMBER --body "Security Review:<br /> $response_vertex"
       echo "------------------Comment inserted on PR------------------"
 - id: call-cloud-run-vertex-api-perf
   name: gcr.io/cloud-builders/gcloud
@@ -80,7 +82,7 @@ steps:
       gh auth login --with-token < token.txt
       echo "------------------Create PR Comment------------------"
       response_vertex=$(cat /workspace/vertex_perf_response.txt)
-      gh pr comment $_PR_NUMBER --body "Perf Review: $response_vertex"
+      gh pr comment $_PR_NUMBER --body "Perf Review:<br /> $response_vertex"
       echo "------------------Comment inserted on PR------------------"
 options:
   automapSubstitutions: true
