@@ -19,7 +19,7 @@ logger = client.logger(log_name)
 
 @cross_origin()
 @functions_framework.http
-def perf_review(request):
+def sec_review(request):
     logger.log(f"Received a request for code review")
 
     # Parse the request body
@@ -39,19 +39,34 @@ def perf_review(request):
     model = GenerativeModel("gemini-pro")
 
     prompt = f"""
-    Task: Conduct an application performance review, focusing on language-specific issues that can lead to bottlenecks or resource contention.
 
-    Input:
-        {user_code}
+    Prompt:
 
-    Output:
-        If issues found:
-            Location: Class and method name(s) where the issue occurs.
-            Issue Type: Categorize the issue (e.g., string concatenation overhead, memory leak, race condition potential, deadlock possibility).
-            Explanation: Detailed description of why this code pattern is problematic for performance.
-            Impact: Explain how this issue could affect the application's speed, responsiveness, or scalability.
-            Recommendation: Provide concrete suggestions for optimizing the code, potentially including alternative implementations.
-        If no significant issues found: Output "No major performance concerns identified."
+        Task: Conduct a security-focused code review to identify potential vulnerabilities.
+
+        Inputs:
+
+            Code: {user_code}
+		    Context: If available, a brief description of:
+		The application's purpose and what type of data it handles.
+		Any frameworks or libraries in use.
+		Focus Areas:
+			Insecure Cookies: Check cookie handling for issues like missing HttpOnly and Secure flags, inadequate expiration, or sensitive data stored in plaintext.
+            Insecure Session Management: Examine session generation, storage, transmission, timeout mechanisms, and protection against session hijacking or fixation.
+		    SQL Injection: Look for any unsanitized user input used directly in SQL queries.
+		    Cross-Site Scripting (XSS): Inspect how user input is handled and whether it's properly sanitized/encoded before being rendered on web pages.
+		    Other Vulnerabilities: Remain alert for:
+		    Authorization flaws (e.g., missing access checks)
+		    Buffer overflows (especially in languages like C/C++)
+		    Insecure file uploads
+		    Sensitive data exposure
+		Output:
+		    If issues found:
+		        Class name.Method name: Where the vulnerability exists.
+		        Issue: Specific type of vulnerability (e.g., SQL injection, reflected XSS).
+		        Explanation: Brief description of why the code is problematic.
+		        Recommendation: Concrete steps to fix the vulnerability, including code examples if possible.
+		    If no issues found: Output "No major security issues found."
 """
     
     prompt_response = model.generate_content(prompt,

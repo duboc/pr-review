@@ -19,7 +19,7 @@ logger = client.logger(log_name)
 
 @cross_origin()
 @functions_framework.http
-def pr_review(request):
+def diff_review(request):
     logger.log(f"Received a request for code review")
 
     # Parse the request body
