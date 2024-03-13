@@ -1,0 +1,93 @@
+diff --git a/api/code-review/main.py b/api/code-review/main.py
+index cacf04c..0cec989 100644
+--- a/api/code-review/main.py
++++ b/api/code-review/main.py
+@@ -39,10 +39,10 @@ def pr_review(request):
+     model = GenerativeModel("gemini-1.0-pro-001")
+ 
+     prompt = f"""
+-    Task: Perform automated code review to identify potential inefficiencies and poor coding practices and provide all the answers in markdown format.
++    Consider the following code:
++    {user_code}
+ 
+-    Input:
+-        {user_code}
++    Perform automated code review to identify potential inefficiencies and poor coding practices and provide all the answers in markdown format.
+     Output:
+         If issues found:
+             Location: Class and method name(s) where the issue occurs.
+diff --git a/api/diff-review/main.py b/api/diff-review/main.py
+index 22f3c7c..6628590 100644
+--- a/api/diff-review/main.py
++++ b/api/diff-review/main.py
+@@ -39,18 +39,10 @@ def diff_review(request):
+     model = GenerativeModel("gemini-1.0-pro-001")
+ 
+     prompt = f"""
+-    Task: Analyze code changes and provide a change management summary and provide all the answers in markdown format.
+-
+-        Inputs:
+-            Code: {user_code}
+-        Output expected:
+-            If changes are found:
+-                Change Summary: A concise explanation, aimed at a change management audience, focusing on the following:
+-                High-Level Description: In a few sentences, describe the overall purpose of the code changes.
+-                Key Changes (Bullet Points):
+-                Briefly explain each significant new code addition indicated by the Git diffs.
+-                Relate these changes to the commit messages for context, if helpful.
+-            If no changes are found: Output "No changes are found."""
++    Consider the following code:
++    {user_code}
++    Analyze code changes and provide a change management summary and provide all the answers in markdown format.
++    If no changes are found: Output "No changes are found."""
+     
+     prompt_response = model.generate_content(prompt,
+         generation_config={
+diff --git a/api/sec-review/main.py b/api/sec-review/main.py
+index 7c982da..756a95b 100644
+--- a/api/sec-review/main.py
++++ b/api/sec-review/main.py
+@@ -41,12 +41,9 @@ def sec_review(request):
+     prompt = f"""
+ 
+     Prompt:
+-
+-        Task: Conduct a security-focused code review to identify potential vulnerabilities and provide all the answers in markdown format.
+-
+-        Inputs:
+-
+-            Code: {user_code}
++    Consider the following code snippet:
++        {user_code}
++    Conduct a security-focused code review to identify potential vulnerabilities and provide all the answers in markdown format.
+ 		Focus Areas:
+ 			Insecure Cookies: Check cookie handling for issues like missing HttpOnly and Secure flags, inadequate expiration, or sensitive data stored in plaintext.
+             Insecure Session Management: Examine session generation, storage, transmission, timeout mechanisms, and protection against session hijacking or fixation.
+diff --git a/src/main.py b/src/main.py
+index 235a242..514afaf 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -1,17 +1,13 @@
+ import google.cloud.storage
+ 
+ 
+-# Function to create a GCS   
+-
+-#removed empty spaces      
+-def create_bucket(bucket_name):
+-    """Creates a new bucket."""
+-    # bucket_name = "your-new-bucket-name"
+-    storage_client = storage.Client()
+-    bucket = storage_client.create_bucket(bucket_name)
+-    print(f"Bucket {bucket.name} created")
+-    return bucket  
++# Function to create blob
++def create_blob_root_container(self, blob_service_client: BlobServiceClient):
++    container_client = blob_service_client.get_container_client(container="$root")
+ 
++    # Create the root container if it doesn't already exist
++    if not container_client.exists():
++        container_client.create_container()
+ 
+ # Function to upload a file to GCS
+ 
