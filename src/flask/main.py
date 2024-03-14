@@ -17,5 +17,9 @@ def create_product():
     data = request.get_json()
     return jsonify({'product': data}), 201
 
+@app.route('/address', methods=['GET'])
+def get_address():
+    return jsonify({'address': '123 Main Street'}), 200
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
