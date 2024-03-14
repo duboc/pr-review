@@ -24,7 +24,7 @@ steps:
     echo "------------------EOF------------------"
     diff_file_content=$(cat /workspace/diff_string.txt)
     echo "------------------Curl Cloud Run------------------"
-    curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://us-central1-conventodapenha.cloudfunctions.net/diff_review > /workspace/vertex_response.txt
+    curl -X POST -H "Content-Type: application/json" -d '{ \"code\": \"$diff_file_content\"}' https://us-central1-conventodapenha.cloudfunctions.net/diff_review > /workspace/vertex_response.txt
     echo "------------------End Cloud Run Response------------------"
 - id: comment_PR_Repo
   name: 'gcr.io/$PROJECT_ID/github'
@@ -46,7 +46,7 @@ steps:
     echo "------------------EOF------------------"
     diff_file_content=$(cat /workspace/diff_string.txt)
     echo "------------------Curl Cloud Run------------------"
-    curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://us-central1-conventodapenha.cloudfunctions.net/sec_review > /workspace/vertex_sec_response.txt
+    curl -X POST -H "Content-Type: application/json" -d '{ \"code\": \"$diff_file_content\"}' https://us-central1-conventodapenha.cloudfunctions.net/sec_review > /workspace/vertex_sec_response.txt
     echo "------------------End Cloud Run Response------------------"
 - id: comment_PR_Repo-sec
   name: 'gcr.io/$PROJECT_ID/github'
@@ -68,7 +68,7 @@ steps:
     echo "------------------EOF------------------"
     diff_file_content=$(cat /workspace/diff_string.txt)
     echo "------------------Curl Cloud Run------------------"
-    curl -X POST -H "Content-Type: application/json" -d '{ "code": "$diff_file_content"}' https://us-central1-conventodapenha.cloudfunctions.net/perf_review > /workspace/vertex_perf_response.txt
+    curl -X POST -H "Content-Type: application/json" -d '{ \"code\": \"$diff_file_content\"}' https://us-central1-conventodapenha.cloudfunctions.net/perf_review > /workspace/vertex_perf_response.txt
     echo "------------------End Cloud Run Response------------------"
 - id: comment_PR_Repo-perf
   name: 'gcr.io/$PROJECT_ID/github'
