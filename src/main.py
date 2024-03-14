@@ -68,4 +68,21 @@ def list_buckets():
         print(bucket.name)
 
     return buckets  
+
+
+# generate python function to delete a bucket   
+
+def delete_bucket(bucket_name):
+    """Deletes a bucket. The bucket must be empty."""
+    # bucket_name = "your-bucket-name"
+
+    storage_client = storage.Client()
+
+    bucket = storage_client.get_bucket(bucket_name)
+    bucket.delete()
+
+    print(f"Bucket {bucket.name} deleted")
+
+    return bucket  
+
  
