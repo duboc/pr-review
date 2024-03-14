@@ -1,7 +1,6 @@
 import os
 import json
 import functions_framework
-
 import google.cloud.logging
 
 import vertexai
