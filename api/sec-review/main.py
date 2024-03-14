@@ -41,12 +41,9 @@ def sec_review(request):
     prompt = f"""
 
     Prompt:
-
-        Task: Conduct a security-focused code review to identify potential vulnerabilities and provide all the answers in markdown format.
-
-        Inputs:
-
-            Code: {user_code}
+    Consider the following code snippet:
+        {user_code}
+    Conduct a security-focused code review to identify potential vulnerabilities and provide all the answers in markdown format.
 		Focus Areas:
 			Insecure Cookies: Check cookie handling for issues like missing HttpOnly and Secure flags, inadequate expiration, or sensitive data stored in plaintext.
             Insecure Session Management: Examine session generation, storage, transmission, timeout mechanisms, and protection against session hijacking or fixation.

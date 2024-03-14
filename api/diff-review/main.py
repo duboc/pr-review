@@ -39,18 +39,10 @@ def diff_review(request):
     model = GenerativeModel("gemini-1.0-pro-001")
 
     prompt = f"""
-    Task: Analyze code changes and provide a change management summary and provide all the answers in markdown format.
-
-        Inputs:
-            Code: {user_code}
-        Output expected:
-            If changes are found:
-                Change Summary: A concise explanation, aimed at a change management audience, focusing on the following:
-                High-Level Description: In a few sentences, describe the overall purpose of the code changes.
-                Key Changes (Bullet Points):
-                Briefly explain each significant new code addition indicated by the Git diffs.
-                Relate these changes to the commit messages for context, if helpful.
-            If no changes are found: Output "No changes are found."""
+    Consider the following code:
+    {user_code}
+    Analyze code changes and provide a change management summary and provide all the answers in markdown format.
+    If no changes are found: Output "No changes are found."""
     
     prompt_response = model.generate_content(prompt,
         generation_config={
