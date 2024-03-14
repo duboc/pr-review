@@ -2,17 +2,17 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route('/order', methods=['POST'])
+@app.route('/order1', methods=['POST'])
 def create_order():
     data = request.get_json()
     return jsonify({'order': data}), 201
 
-@app.route('/customer', methods=['POST'])
+@app.route('/customer2', methods=['POST'])
 def create_customer():
     data = request.get_json()
     return jsonify({'customer': data}), 201
 
-@app.route('/product', methods=['POST'])
+@app.route('/product3', methods=['POST'])
 def create_product():
     data = request.get_json()
     return jsonify({'product': data}), 201
