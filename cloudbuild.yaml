@@ -88,5 +88,29 @@ steps:
       response_vertex=$(cat /workspace/vertex_perf_response.txt)
       gh pr comment $_PR_NUMBER --body "Perf Review: $response_vertex"
       echo "------------------Comment inserted on PR------------------"
+- id: call-cloud-run-vertex-api-unit
+  name: gcr.io/cloud-builders/gcloud
+  script: |
+    echo "----------Teste VAR:"
+    cat /workspace/diff_string.txt
+    echo "------------------EOF------------------"
+    diff_string=$(cat /workspace/diff_string.txt)
+    diff_file_content=$(echo "$diff_string" | base64)
+    echo "{\"code\":\"$diff_file_content\"}" > /workspace/file.json 
+    echo "------------------Curl Cloud Run------------------"
+    curl -X POST -H "Content-Type: application/json"  --data @/workspace/file.json  https://us-central1-conventodapenha.cloudfunctions.net/unit_review> /workspace/vertex_unit_response.txt
+    echo "------------------End Cloud Run Response------------------"
+- id: comment_PR_Repo-unit
+  name: 'gcr.io/$PROJECT_ID/github'
+  entrypoint: bash
+  args: 
+    - -c
+    - | 
+      echo "------------------GH AUTH------------------"
+      gh auth login --with-token < token.txt
+      echo "------------------Create PR Comment------------------"
+      response_vertex=$(cat /workspace/vertex_unit_response.txt)
+      gh pr comment $_PR_NUMBER --body "Unit Review: $response_vertex"
+      echo "------------------Comment inserted on PR------------------"
 options:
   automapSubstitutions: true
