@@ -1,14 +1,5 @@
 import google.cloud.storage
 
-
-# Function to create blob
-def create_blob_root_container(self, blob_service_client: BlobServiceClient):
-    container_client = blob_service_client.get_container_client(container="$root")
-
-    # Create the root container if it doesn't already exist
-    if not container_client.exists():
-        container_client.create_container()
-
 # Function to upload a file to GCS
 
 import google.cloud.storage
@@ -72,17 +63,5 @@ def list_buckets():
 
 # generate python function to delete a bucket   
 
-def delete_bucket(bucket_name):
-    """Deletes a bucket. The bucket must be empty."""
-    # bucket_name = "your-bucket-name"
-
-    storage_client = storage.Client()
-
-    bucket = storage_client.get_bucket(bucket_name)
-    bucket.delete()
-
-    print(f"Bucket {bucket.name} deleted")
-
-    return bucket  
 
  
