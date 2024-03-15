@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import datetime
 
 app = Flask(__name__)
 
@@ -20,6 +21,10 @@ def create_product():
 @app.route('/address', methods=['GET'])
 def get_address():
     return jsonify({'address': '123 Main Street'}), 200
+
+@app.route('/date', methods=['GET'])
+def get_date():
+    return jsonify({'date': datetime.datetime.now().strftime('%Y-%m-%d')}), 200
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
