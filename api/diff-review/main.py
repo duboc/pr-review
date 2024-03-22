@@ -1,12 +1,12 @@
 import os
 import json
-import functions_framework
-
+#import functions_framework
+from flask import Flask
 import google.cloud.logging
 
 import vertexai
 from vertexai.language_models import TextGenerationModel
-from flask_cors import cross_origin
+#from flask_cors import cross_origin
 from vertexai.preview.generative_models import GenerativeModel, Part
 import vertexai.preview.generative_models as generative_
 
@@ -17,8 +17,16 @@ client.setup_logging()
 log_name = "code-cloudfunction-log"
 logger = client.logger(log_name)
 
-@cross_origin()
-@functions_framework.http
+
+app = Flask(__name__)
+
+@app.route('/')
+def main():
+    name = PROJECT_ID
+    return f"diff-review app - {name}!"
+
+
+@app.route('/diff_review', methods=['POST'])
 def diff_review(request):
     logger.log(f"Received a request for code review")
 
@@ -67,3 +75,6 @@ def diff_review(request):
     data['response'] = []
     data['response'].append({"details": prompt_response.text})
     return json.dumps(data), 200, {'Content-Type': 'application/json'}
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
