@@ -29,7 +29,8 @@ steps:
     curl -X POST -H "Content-Type: application/json"  --data @/workspace/file.json https://diff-review-qgbqdf7bda-uc.a.run.app/diff_review > /workspace/vertex_response.txt
     echo "------------------End Cloud Run Response------------------"
     echo "------------------Format respose json to text------------------"
-    jq .message.temperature /workspace/vertex_response.txt > /workspace/diff_response.txt
+    apt update && apt install jq -y 
+    jq .response.details /workspace/vertex_response.txt > /workspace/diff_response.txt
     echo "------------------Respose Formated------------------"
 - id: comment_PR_Repo
   name: 'gcr.io/$PROJECT_ID/github'
