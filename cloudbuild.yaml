@@ -51,7 +51,7 @@ steps:
     diff_file_content=$(echo "$diff_string" | base64)
     echo "{\"code\":\"$diff_file_content\"}" > /workspace/file.json 
     echo "------------------Curl Cloud Run------------------"
-    curl -X POST -H "Content-Type: application/json"  --data @/workspace/file.json https://us-central1-conventodapenha.cloudfunctions.net/sec_review > /workspace/vertex_sec_response.txt
+    curl -X POST -H "Content-Type: application/json"  --data @/workspace/file.json https://sec-review-qgbqdf7bda-uc.a.run.app/sec_review > /workspace/vertex_sec_response.txt
     echo "------------------End Cloud Run Response------------------"
 - id: comment_PR_Repo-sec
   name: 'gcr.io/$PROJECT_ID/github'
