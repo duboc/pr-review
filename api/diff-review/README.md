@@ -1,12 +1,10 @@
-# Cloud Function Vertex API
-
+# Cloud Run Vertex API
 This application demonstrates a simple GenAI Diff Review using Cloud Run.
-
 
 ## Steps to deploy
 Export your project definitions:
 ```bash
-export MY_PROJECT_ID="gcp-project-id"
+export MY_PROJECT_ID="your-project-id"
 export MY_PROJECT_NO="1234567890"
 export MY_LOCATION="us-central1"
 ``` 
