@@ -47,10 +47,11 @@ def diff_review():
     model = GenerativeModel("gemini-1.0-pro-001")
 
     prompt = f"""
+    Analyze code changes provided below and provide a change management summary by file. Make sure your answer is written in markdown format to be inserted in Github PR comment.
+    If no changes are found: Output "No changes are found.
     Consider the following code:
     {user_code}
-    Analyze code changes and provide a change management summary and provide all the answers in markdown format.
-    If no changes are found: Output "No changes are found."""
+    """
     
     prompt_response = model.generate_content(prompt,
         generation_config={
