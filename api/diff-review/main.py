@@ -1,31 +1,30 @@
 import os
-import json
 import base64
 from flask import Flask, request
 import google.cloud.logging
 
 import vertexai
 from vertexai.language_models import TextGenerationModel
-#from flask_cors import cross_origin
-from vertexai.preview.generative_models import GenerativeModel, Part
-import vertexai.preview.generative_models as generative_
+from vertexai.preview.generative_models import GenerativeModel
 
 PROJECT_ID = os.environ.get('GCP_PROJECT', '-')
 LOCATION = os.environ.get('GCP_REGION', '-')
-client = google.cloud.logging.Client(project=PROJECT_ID)
-client.setup_logging()
-log_name = "code-cloudfunction-log"
-logger = client.logger(log_name)
-
 
 app = Flask(__name__)
 
+#Instanciate Cloud Logging client
+client = google.cloud.logging.Client(project=PROJECT_ID)
+client.setup_logging()
+log_name = "diffreview-cloudrun-log"
+logger = client.logger(log_name)
+
+# Default Route to service heath easy validation
 @app.route('/')
 def main():
     name = PROJECT_ID
     return f"diff-review app - {name}!"
 
-
+# Diff Review Post 
 @app.route('/diff_review', methods=['POST'])
 def diff_review():
     logger.log(f"Received a request for code review")
@@ -33,7 +32,7 @@ def diff_review():
     # Parse the request body
     request_json = request.get_json(silent=True)
 
-    # Extract the word from the request body
+    # Extract the word from the request body and decode
     if request_json and 'code' in request_json:
         user_code = base64.b64decode(request_json['code']) 
         logger.log(f"Received code from user: {user_code}")
@@ -41,9 +40,9 @@ def diff_review():
         user_code = "NO SOURCE PROVIDED"
         logger.log(user_code)
 
-    vertexai.init(project=PROJECT_ID, location=LOCATION)
-    # model = TextGenerationModel.from_pretrained("text-bison")
-    
+ 
+    #Vertex AI integration
+    vertexai.init(project=PROJECT_ID, location=LOCATION) 
     model = GenerativeModel("gemini-1.0-pro-001")
 
     prompt = f"""
@@ -68,9 +67,7 @@ def diff_review():
             "top_p": 1
         },
     )
-    
     logger.log(f"Gemini Model response: {prompt_response.text}")
-
 
     # Format the response using Markdown
     format_prompt = f"""
@@ -86,7 +83,6 @@ def diff_review():
             "top_p": 1
         },
     )
-    
     logger.log(f"Formated Gemini Model response: {final_response.text}")
 
     #Return the final response as plain text
