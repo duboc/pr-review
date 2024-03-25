@@ -47,8 +47,19 @@ def diff_review():
     model = GenerativeModel("gemini-1.0-pro-001")
 
     prompt = f"""
-    Analyze code changes provided below and provide a change management summary by file. Make sure your answer is written in markdown format to be inserted in Github PR comment.
+    As a Senior Developer, ignore small changes and summarize the following code in bullet points, using the following format:
+
+    Main changes:
+    - Bullet-points with main changes
+
+    Performance and security recommendations:
+    - Bullet-points with performance and security recommendations that could be added
+
+    Broken SOLID Concepts:
+    - Bullet-points with broken solid concepts
+
     If no changes are found: Output "No changes are found.
+
     Consider the following code:
     {user_code}
     """
@@ -71,10 +82,25 @@ def diff_review():
     
     logger.log(f"Gemini Model response: {prompt_response.text}")
 
+
+    format_prompt = f"""
+     Execute this list of tasks:
+     - Format the code as Markdown, where the topic's header must be bold
+     For the following text:
+     {prompt_response.text}
+    """
+    final_response = model.generate_content(format_prompt,
+        generation_config={
+            "max_output_tokens": 4096,
+            "temperature": 0.4,
+            "top_p": 1
+        },
+    )
+
     # Format the response
     data = {}
     data['response'] = []
-    data['response'].append({"details": prompt_response.text})
+    data['response'].append({"details": final_response.text})
     return json.dumps(data), 200, {'Content-Type': 'application/json'}
 
 if __name__ == "__main__":
