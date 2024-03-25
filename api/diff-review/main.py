@@ -1,6 +1,6 @@
 import os
 import json
-#import functions_framework
+import base64
 from flask import Flask, request
 import google.cloud.logging
 
@@ -35,7 +35,7 @@ def diff_review():
 
     # Extract the word from the request body
     if request_json and 'code' in request_json:
-        user_code = request_json['code']
+        user_code = base64.b64decode(request_json['code']) 
         logger.log(f"Received code from user: {user_code}")
     else:
         user_code = "NO SOURCE PROVIDED"
@@ -50,11 +50,8 @@ def diff_review():
     As a Senior Developer, ignore small changes and summarize the following code in bullet points, using the following format:
 
     Main changes:
-    - Bullet-points with main changes
-
-    Performance and security recommendations:
-    - Bullet-points with performance and security recommendations that could be added
-
+    - Bullet-points explaining the main changes
+    
     Broken SOLID Concepts:
     - Bullet-points with broken solid concepts
 
@@ -71,18 +68,11 @@ def diff_review():
             "top_p": 1
         },
     )
-
-    # parameters = {
-    #     "temperature": 1.0,
-    #     "max_output_tokens": 256,
-    #     "top_p": 1.0,
-    #     "top_k": 40
-    # }
-    # prompt_response = model.predict(prompt, **parameters)
     
     logger.log(f"Gemini Model response: {prompt_response.text}")
 
 
+    # Format the response using Markdown
     format_prompt = f"""
      Execute this list of tasks:
      - Format the code as Markdown, where the topic's header must be bold
@@ -96,13 +86,10 @@ def diff_review():
             "top_p": 1
         },
     )
+    
+    logger.log(f"Formated Gemini Model response: {final_response.text}")
 
-    # Format the response
-    # data = {}
-    # data['response'] = []
-    # data['response'].append({"details": final_response.text})
-    # return json.dumps(data), 200, {'Content-Type': 'application/json'}
-
+    #Return the final response as plain text
     return final_response.text, 200, {'Content-Type': 'text/plain'}
 
 if __name__ == "__main__":
