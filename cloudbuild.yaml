@@ -30,7 +30,7 @@ steps:
     echo "------------------End Cloud Run Response------------------"
     echo "------------------Format respose json to text------------------"
     apt update && apt install jq -y 
-    jq .response.details /workspace/vertex_response.txt > /workspace/diff_response.txt
+    jq .response[].details /workspace/vertex_response.txt > /workspace/diff_response.txt
     echo "------------------Respose Formated------------------"
 - id: comment_PR_Repo
   name: 'gcr.io/$PROJECT_ID/github'
