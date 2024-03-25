@@ -2,3 +2,4 @@ functions-framework==3.*
 google-cloud-aiplatform >= 1.31.0
 google-cloud-logging
 Flask==3.0.2
+requests==2.31.0

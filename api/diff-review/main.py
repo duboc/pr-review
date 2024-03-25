@@ -1,7 +1,7 @@
 import os
 import json
 #import functions_framework
-from flask import Flask
+from flask import Flask, request
 import google.cloud.logging
 
 import vertexai
@@ -27,7 +27,7 @@ def main():
 
 
 @app.route('/diff_review', methods=['POST'])
-def diff_review(request):
+def diff_review():
     logger.log(f"Received a request for code review")
 
     # Parse the request body
