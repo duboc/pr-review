@@ -98,10 +98,12 @@ def diff_review():
     )
 
     # Format the response
-    data = {}
-    data['response'] = []
-    data['response'].append({"details": final_response.text})
-    return json.dumps(data), 200, {'Content-Type': 'application/json'}
+    # data = {}
+    # data['response'] = []
+    # data['response'].append({"details": final_response.text})
+    # return json.dumps(data), 200, {'Content-Type': 'application/json'}
+
+    return final_response.text, 200, {'Content-Type': 'text/plain'}
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

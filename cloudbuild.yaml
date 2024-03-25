@@ -28,10 +28,7 @@ steps:
     echo "------------------Curl Cloud Run------------------"
     curl -X POST -H "Content-Type: application/json"  --data @/workspace/file.json https://diff-review-qgbqdf7bda-uc.a.run.app/diff_review > /workspace/vertex_response.txt
     echo "------------------End Cloud Run Response------------------"
-    echo "------------------Format respose json to text------------------"
-    apt update && apt install jq -y 
-    jq .response[].details /workspace/vertex_response.txt > /workspace/diff_response.txt
-    echo "------------------Respose Formated------------------"
+   
 - id: comment_PR_Repo
   name: 'gcr.io/$PROJECT_ID/github'
   entrypoint: bash
@@ -41,8 +38,8 @@ steps:
       echo "------------------GH AUTH------------------"
       gh auth login --with-token < token.txt
       echo "------------------Create PR Comment------------------"
-      response_vertex=$(cat /workspace/diff_response.txt)
-      gh pr comment $_PR_NUMBER --body "Diff Review:\n\n $response_vertex"
+      response_vertex=$(cat /workspace/vertex_response.txt)
+      gh pr comment $_PR_NUMBER --body "Diff Review: $response_vertex"
       echo "------------------Comment inserted on PR------------------"
 - id: call-cloud-run-vertex-api-sec
   name: gcr.io/cloud-builders/gcloud
