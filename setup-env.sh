@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_ID=$(gcloud config list --format='value(core.project)')                                                                                                      py cli-code-api 11:26:18
+PROJECT_ID=$(gcloud config list --format='value(core.project)')
 PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
 
 ### adicionar comentarios
