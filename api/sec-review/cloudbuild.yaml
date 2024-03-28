@@ -1,0 +1,37 @@
+steps:
+  # Install dependencies
+  - name: python
+    entrypoint: pip
+    args: ["install", "-r", "requirements.txt", "--user"]
+  
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 
+           'us-central1-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_SERVICE_NAME}:${SHORT_SHA}', '.']
+
+  # Docker push to Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push',  '${_REPO_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_SERVICE_NAME}:${SHORT_SHA}']
+  
+  # Deploy to Cloud Run
+  - name: google/cloud-sdk
+    args: ['gcloud', 'run', 'deploy', '${_SERVICE_NAME}', 
+           '--image=${_REPO_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${_SERVICE_NAME}:${SHORT_SHA}', 
+           '--region', '${_SERVICE_REGION}', '--platform', 'managed', 
+           '--update-env-vars=GCP_PROJECT=${PROJECT_ID},GCP_REGION=${_SERVICE_REGION}', 
+           '--allow-unauthenticated']
+  
+# Store images in Google Artifact Registry 
+images:
+  - us-central1-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/sec-review:${SHORT_SHA}
+
+substitutions:
+  _ARTIFACT_REGISTRY_REPO: sec-review-repo
+  _REPO_LOCATION: us-central1
+  _SERVICE_NAME: sec-review
+  _SERVICE_REGION: us-central1
+
+# gcloud artifacts repositories create sec-review-repo --repository-format=docker --location=us-central1 --description="SecReview Docker Repository"
+# gcloud builds submit . --config=./cloudbuild.yaml --substitutions SHORT_SHA=1.0
+
+
