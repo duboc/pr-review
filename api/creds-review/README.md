@@ -25,7 +25,7 @@ Create a Docker Repo on Artifact Registry:
 gcloud artifacts repositories create cred-review-repo \
        --repository-format=docker \
        --location=$MY_LOCATION \
-       --description="SecReview Docker Repository"
+       --description="CredsReview Docker Repository"
 ``` 
 
 Grant IAM permissions:
