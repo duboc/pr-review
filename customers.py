@@ -8,7 +8,7 @@ password = "123mudar"
 
 # Define the connection parameters
 connection_parameters = {
-    "database": "demo",
+    "database": "dem",
     "user": "postgres",
     "password": password,
     "host": "10.81.224.3",
