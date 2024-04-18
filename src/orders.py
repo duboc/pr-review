@@ -9,15 +9,11 @@ def index():
 
 @app.route('/orders', methods=['GET'])
 def orders():
-    # Hardcoded credentials for demonstration purposes only.
-    # In a production environment, these credentials should be stored securely.
-    server = 'my-mssql-server'
-    user = 'my-username'
-    password = 'my-password'
-    database = 'my-database'
+    # Load the service account credentials from a file
+    credentials = pytds.Credentials.from_file('service-account.json')
 
-    # Connect to the MSSQL server
-    conn = pytds.connect(server, user, password, database)
+    # Connect to the MSSQL server using the service account credentials
+    conn = pytds.connect(server='my-mssql-server', credentials=credentials, database='my-database')
     cursor = conn.cursor()
 
     # Query the orders table
