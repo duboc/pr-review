@@ -1,18 +1,5 @@
 import google.cloud.storage
 
-
-# Function to create a GCS   
-
-#removed empty spaces      
-def create_bucket(bucket_name):
-    """Creates a new bucket."""
-    # bucket_name = "your-new-bucket-name"
-    storage_client = storage.Client()
-    bucket = storage_client.create_bucket(bucket_name)
-    print(f"Bucket {bucket.name} created")
-    return bucket  
-
-
 # Function to upload a file to GCS
 
 import google.cloud.storage
@@ -58,3 +45,23 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     print(f"File {source_file_name} uploaded to {destination_blob_name}.")
 
     return blob  
+
+# generate python function to list buckets   
+def list_buckets():
+    """Lists all buckets."""
+    storage_client = storage.Client()
+
+    # Note: Client.list_buckets requires at least package version 1.17.0.
+    buckets = list(storage_client.list_buckets())
+
+    print("Buckets:")
+    for bucket in buckets:
+        print(bucket.name)
+
+    return buckets  
+
+
+# generate python function to delete a bucket   
+
+
+ 
