@@ -1,24 +1,23 @@
 from flask import Flask, jsonify
 import psycopg2
+from google.cloud import storage
 
 app = Flask(__name__)
 
 @app.route('/order', methods=['GET'])
 def get_order():
-    # Hardcoded credentials for demonstration purposes only.
-    # In a production environment, these credentials should be stored securely.
-    host = 'localhost'
-    database = 'postgres'
-    user = 'postgres'
-    password = 'my_password'
+    # Get the credentials from the Google Cloud Storage client.
+    storage_client = storage.Client()
+    credentials = storage_client._credentials
 
+    # Use the credentials to establish a connection to the PostgreSQL database.
     try:
-        # Establish a connection to the PostgreSQL database.
         connection = psycopg2.connect(
-            host=host,
-            database=database,
-            user=user,
-            password=password
+            host='localhost',
+            database='postgres',
+            user='postgres',
+            password=credentials.service_account_email,
+            service_account_path=credentials.service_account_file
         )
 
         # Create a cursor to execute queries.
