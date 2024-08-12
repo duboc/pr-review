@@ -1,13 +1,18 @@
-## crie uma conexão a um banco postgres usando usuario local e consulte dados de cliente e produto
-
 import psycopg2
+import os
+
+# Use environment variables for sensitive information
+DB_HOST = os.environ.get('DB_HOST', 'localhost')
+DB_NAME = os.environ.get('DB_NAME', 'mydatabase')
+DB_USER = os.environ.get('DB_USER', 'myuser')
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
 
 # Conexão com o banco de dados PostgreSQL
 conn = psycopg2.connect(
-    host="localhost",
-    database="mydatabase",
-    user="myuser",
-    password="mypassword"
+    host=DB_HOST,
+    database=DB_NAME,
+    user=DB_USER,
+    password=DB_PASSWORD
 )
 
 # Cria um cursor
