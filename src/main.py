@@ -58,6 +58,14 @@ def list_buckets():
     for bucket in buckets:
         print(bucket.name)
 
+      print("Buckets:")
+    for bucket in buckets:
+        print(bucket.name)
+
+  print("Buckets:")
+    for bucket in buckets:
+        print(bucket.name)
+
     return buckets  
 
 
